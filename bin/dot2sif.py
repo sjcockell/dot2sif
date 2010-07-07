@@ -1,9 +1,21 @@
 from optparse import OptionParser
+import re
 
 def main(inf, outf, ints):
+	p = re.compile('^\s+(\w+) -> (\w+) \[label=\"(.+)\"\,')
+	fh = open(outf, 'w')
 	with open(inf) as f:
 	    for line in f.readlines():
-			pass
+			if line.find(' -> ') != -1:
+				#node79153 -> node31061 [label="publishe
+				m = p.search(line)
+				if m:
+					if ints:
+						fh.write(m.group(1)+'\t'+m.group(3)+'\t'+m.group(2))
+					else:
+						fh.write(m.group(1)+'\t'+m.group(2))
+	fh.close()
+				
 
 if __name__ == '__main__':
 	parser = OptionParser(usage="Usage: %prog [options] infile.dot outfile.sif", 
